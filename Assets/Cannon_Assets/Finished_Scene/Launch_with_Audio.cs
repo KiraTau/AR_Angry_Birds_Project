@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 // using System;
 // using System;
-using System;
+using sys = System;
 using TMPro;
 
 public class Launch_with_Audio : MonoBehaviour
@@ -87,10 +87,6 @@ public class Launch_with_Audio : MonoBehaviour
 
     public bool doublePoints = false;
 
-    private Vector3 touchPressDownPos;
-    private Vector3 touchReleasePos;
-    private Vector3 Dist;
-
 
     private UnityEngine.Vector3 firstPosition;
 
@@ -115,7 +111,7 @@ public class Launch_with_Audio : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        /*if (Input.touchCount > 0) {
+        if (Input.touchCount > 0) {
             prevHasInput = true;
 
             Touch touch = Input.GetTouch(0);
@@ -177,29 +173,6 @@ public class Launch_with_Audio : MonoBehaviour
             }        
                 
             prevHasInput = false;
-        }*/
-        if (Input.touchCount > 0)
-        {
-            Touch touch = Input.GetTouch(0);
-            if (touch.phase == TouchPhase.Began)
-            {
-                touchPressDownPos = touch.position;
-            }
-            if (touch.phase == TouchPhase.Ended)
-            {
-                touchReleasePos = touch.position;
-                Dist = touchReleasePos - touchPressDownPos;
-
-                source.PlayOneShot(shootsound, highVolumeRange);
-
-                GameObject launchThis = Instantiate(projectile, transform.position, transform.rotation) as GameObject;
-                launchThis.GetComponent<Rigidbody>().AddRelativeForce(new Vector3(0, launchVelocity * Mathf.Sqrt(Dist.x * Dist.x + Dist.y * Dist.y), 0));
-
-                // launchVelocity = 7f;
-                turnCount = turnCount + 1;
-
-                DisplayTurn(turnCount);
-            }
         }
 
         int totalPigs = GameObject.FindGameObjectsWithTag("Pig").Length;

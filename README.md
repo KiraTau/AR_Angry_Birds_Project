@@ -7,3 +7,4 @@ DestroyPigs for destroying pigs and keeping track of player input
 Launch_with_Audio for launching the projectile with computer input
 
 To build, use android platform(the platform we tested on) with defualt settings.
+The two targets are the VC(ground) and honey(cannon).

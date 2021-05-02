@@ -3,7 +3,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using sys = System;
+using System;
 using TMPro;
 
 public class Launch_with_Audio : MonoBehaviour
@@ -22,9 +22,12 @@ public class Launch_with_Audio : MonoBehaviour
 
     private bool startup = true;
     private float distance;
-    private bool prevHasInput = false;
 
     public bool doublePoints = false;
+
+    private Vector3 touchPressDownPos;
+    private Vector3 touchReleasePos;
+    private Vector3 Dist;
 
 
     private UnityEngine.Vector3 firstPosition;
@@ -53,31 +56,28 @@ public class Launch_with_Audio : MonoBehaviour
     // displays game over text.
     void Update()
     {
-        if (Input.touchCount > 0) {
-            // Get furthest distance of swipe
-            prevHasInput = true;
+        if (Input.touchCount > 0)
+        {
             Touch touch = Input.GetTouch(0);
-            UnityEngine.Vector2 distVect = touch.deltaPosition;
-            float dist = distVect.magnitude;
-            dist = dist / 10;
-            distance = dist;
-
-        } else {
-            if (prevHasInput)
+            if (touch.phase == TouchPhase.Began)
             {
-                float vol = Random.Range(lowVolumeRange, highVolumeRange);
-                source.PlayOneShot(shootsound, vol);
+                touchPressDownPos = touch.position;
+            }
+            if (touch.phase == TouchPhase.Ended)
+            {
+                touchReleasePos = touch.position;
+                Dist = touchReleasePos - touchPressDownPos;
 
-                // Instantiate and launch projectile object
+                source.PlayOneShot(shootsound, highVolumeRange);
+
                 GameObject launchThis = Instantiate(projectile, transform.position, transform.rotation) as GameObject;
-                launchThis.GetComponent<Rigidbody>().AddRelativeForce(new Vector3(0, launchVelocity * distance, 0));
+                launchThis.GetComponent<Rigidbody>().AddRelativeForce(new Vector3(0, launchVelocity * Mathf.Sqrt(Dist.x * Dist.x + Dist.y * Dist.y), 0));
 
-                turnCount = turnCount + 1; // Increment turn count
+                // launchVelocity = 7f;
+                turnCount = turnCount + 1;
 
-                DisplayTurn(turnCount); // Display player's turn
-            }        
-                
-            prevHasInput = false;
+                DisplayTurn(turnCount);
+            }
         }
 
         // Actions that depend on total pigs left in game
